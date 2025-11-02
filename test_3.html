@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgriDose Simples</title>
+  <style>
+    :root {
+      --verde-escuro: #1b4332;
+      --verde-medio: #2d6a4f;
+      --amarelo: #ffd166;
+      --cinza-fundo: #f4f4f4;
+      --cinza-card: #ffffff;
+      --texto-principal: #1b1b1b;
+      --texto-secundario: #4f4f4f;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--cinza-fundo);
+      color: var(--texto-principal);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(145deg, rgba(27, 67, 50, 0.92), rgba(45, 106, 79, 0.88)), url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat;
+      color: white;
+      padding: 80px 24px 100px;
+      text-align: center;
+    }
+
+    header .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    header p {
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 32px;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--amarelo);
+      color: var(--verde-escuro);
+      box-shadow: 0 10px 25px rgba(255, 209, 102, 0.35);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    main {
+      margin-top: -40px;
+      padding-bottom: 100px;
+    }
+
+    section {
+      padding: 40px 24px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--cinza-card);
+      border-radius: 18px;
+      box-shadow: 0 20px 45px rgba(27, 67, 50, 0.12);
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--verde-escuro);
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--texto-secundario);
+      margin-bottom: 32px;
+      max-width: 720px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .step-card {
+      background: rgba(45, 106, 79, 0.08);
+      border-radius: 14px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-card span {
+      display: inline-block;
+      background: var(--verde-medio);
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    form {
+      display: grid;
+      gap: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--verde-escuro);
+    }
+
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      background: rgba(27, 67, 50, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(27, 67, 50, 0.1);
+      padding: 12px 14px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--verde-medio);
+      box-shadow: 0 0 0 4px rgba(45, 106, 79, 0.18);
+      outline: none;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px 24px;
+    }
+
+    .result-card {
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid rgba(27, 67, 50, 0.1);
+      background: linear-gradient(135deg, rgba(27, 67, 50, 0.06), rgba(45, 106, 79, 0.08));
+    }
+
+    .result-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--verde-medio);
+    }
+
+    .result-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .result-item strong {
+      font-size: 1rem;
+      color: var(--texto-secundario);
+    }
+
+    .alert {
+      border-left: 4px solid #f2545b;
+      background: rgba(242, 84, 91, 0.08);
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 14px;
+      color: #8b1f25;
+      font-weight: 600;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .benefit-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid rgba(45, 106, 79, 0.1);
+    }
+
+    .benefit-card h4 {
+      color: var(--verde-medio);
+      font-size: 1.1rem;
+    }
+
+    blockquote {
+      background: rgba(45, 106, 79, 0.1);
+      border-left: 4px solid var(--verde-medio);
+      padding: 18px 22px;
+      border-radius: 12px;
+      font-style: italic;
+      color: var(--texto-principal);
+    }
+
+    .faq {
+      display: grid;
+      gap: 16px;
+    }
+
+    details {
+      background: white;
+      border-radius: 12px;
+      padding: 18px 24px;
+      border: 1px solid rgba(27, 67, 50, 0.12);
+      cursor: pointer;
+    }
+
+    summary {
+      font-weight: 700;
+      color: var(--verde-escuro);
+    }
+
+    .lead-form {
+      background: var(--verde-escuro);
+      color: white;
+      border-radius: 18px;
+      padding: 32px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .lead-form label {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .lead-form input,
+    .lead-form textarea {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: rgba(27, 27, 27, 0.65);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 70px 20px 90px;
+      }
+
+      .card {
+        padding: 24px;
+      }
+
+      main {
+        margin-top: -24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero-content">
+      <h1>Calcule a dosagem ideal de defensivos em segundos.</h1>
+      <p>AgriDose Simples combina cálculos de campo e simulações rápidas para orientar o manejo seguro e eficiente da sua lavoura.</p>
+      <div class="cta-group">
+        <button class="btn btn-primary" onclick="scrollToSection('dose-calculator')">Começar Simulação</button>
+        <button class="btn btn-secondary" onclick="scrollToSection('dosage-calculator-card')">Ver calculadora de dosagem</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="how-it-works">
+      <div class="container card">
+        <h2 class="section-title">Como funciona</h2>
+        <p class="section-subtitle">Quatro passos para planejar a aplicação: informe os dados da área, simule as condições do campo, avalie recomendações e leve o plano direto para a equipe.</p>
+        <div class="steps">
+          <div class="step-card">
+            <span>1</span>
+            <h3>Preencha os dados da lavoura</h3>
+            <p>Cultura, alvo, área em hectares e volume de calda desejado.</p>
+          </div>
+          <div class="step-card">
+            <span>2</span>
+            <h3>Calcule a mistura</h3>
+            <p>O sistema sugere a quantidade total de produto e orienta por tanque.</p>
+          </div>
+          <div class="step-card">
+            <span>3</span>
+            <h3>Simule cenários reais</h3>
+            <p>Ajuste para clima, estágio da praga e condições da lavoura.</p>
+          </div>
+          <div class="step-card">
+            <span>4</span>
+            <h3>Salve e compartilhe</h3>
+            <p>Baixe o plano ou envie para o time diretamente do celular.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dose-calculator">
+      <div class="container">
+        <div class="card" id="dosage-calculator-card">
+          <h2 class="section-title">Calculadora de dosagem</h2>
+          <p class="section-subtitle">Insira os dados principais para calcular o volume total da calda, o total de produto e a divisão por tanque.</p>
+
+          <form id="dosage-form">
+            <div class="grid-2">
+              <div>
+                <label for="area">Área a tratar (ha)</label>
+                <input type="number" id="area" step="0.01" min="0" placeholder="Ex.: 25" required />
+              </div>
+              <div>
+                <label for="volumeCalda">Volume de calda desejado (L/ha)</label>
+                <input type="number" id="volumeCalda" step="0.1" min="0" placeholder="Ex.: 150" required />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="doseRecomendada">Dose recomendada do produto (L ou kg por ha)</label>
+                <input type="number" id="doseRecomendada" step="0.01" min="0" placeholder="Ex.: 0,8" required />
+              </div>
+              <div>
+                <label for="concentracao">Concentração do produto (formulado)</label>
+                <input type="number" id="concentracao" step="0.01" min="0" placeholder="Ex.: 480 (g/L)" required />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="limiteLegal">Limite máximo permitido (L ou kg por ha)</label>
+                <input type="number" id="limiteLegal" step="0.01" min="0" placeholder="Ex.: 1,2" required />
+              </div>
+              <div>
+                <label for="volumeTanque">Capacidade do tanque (L)</label>
+                <input type="number" id="volumeTanque" step="1" min="1" placeholder="Ex.: 2000" required />
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Calcular dosagem</button>
+          </form>
+
+          <div id="dosage-results" class="result-card" style="display: none;">
+            <p class="result-title">Resultado da mistura</p>
+            <div class="result-grid">
+              <div class="result-item">
+                <strong>Calda total:</strong>
+                <span id="caldaTotal"></span>
+              </div>
+              <div class="result-item">
+                <strong>Produto total:</strong>
+                <span id="produtoTotal"></span>
+              </div>
+              <div class="result-item">
+                <strong>Tanques necessários:</strong>
+                <span id="tanquesNecessarios"></span>
+              </div>
+              <div class="result-item">
+                <strong>Produto por tanque:</strong>
+                <span id="produtoPorTanque"></span>
+              </div>
+            </div>
+            <div id="alertaLimite" class="alert" style="display: none;">
+              Dose calculada acima do limite informado. Ajuste a dose ou consulte o engenheiro agrônomo responsável.
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="simulator">
+          <h2 class="section-title">Simulador de cenários</h2>
+          <p class="section-subtitle">Ajuste rapidamente o plano conforme cultura, estágio da praga e condições de campo.</p>
+
+          <form id="simulation-form">
+            <div class="grid-2">
+              <div>
+                <label for="cultura">Cultura</label>
+                <select id="cultura" required></select>
+              </div>
+              <div>
+                <label for="praga">Alvo (praga/doença)</label>
+                <select id="praga" required></select>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div>
+                <label for="estagio">Estágio da cultura</label>
+                <select id="estagio" required>
+                  <option value="inicial">Inicial</option>
+                  <option value="vegetativo">Vegetativo</option>
+                  <option value="reprodutivo">Reprodutivo</option>
+                  <option value="maturacao">Maturação</option>
+                </select>
+              </div>
+              <div>
+                <label for="clima">Condição climática prevista</label>
+                <select id="clima" required>
+                  <option value="ideal">Temperatura amena e vento baixo</option>
+                  <option value="vento-moderado">Vento moderado &gt; 10 km/h</option>
+                  <option value="temperatura-alta">Temperatura &gt; 30 ºC</option>
+                  <option value="umidade-baixa">Umidade relativa &lt; 50%</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Simular recomendações</button>
+          </form>
+
+          <div id="simulation-results" class="result-card" style="display: none;">
+            <p class="result-title">Plano sugerido</p>
+            <div class="result-grid">
+              <div class="result-item">
+                <strong>Volume de calda recomendado:</strong>
+                <span id="volumeRecomendado"></span>
+              </div>
+              <div class="result-item">
+                <strong>Intervalo entre aplicações:</strong>
+                <span id="intervaloAplicacao"></span>
+              </div>
+              <div class="result-item">
+                <strong>Condições críticas:</strong>
+                <span id="condicoesCriticas"></span>
+              </div>
+              <div class="result-item">
+                <strong>EPIs obrigatórios:</strong>
+                <span id="epis"></span>
+              </div>
+            </div>
+            <div class="alert" id="alertaClima" style="display: none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="benefits">
+      <div class="container card">
+        <h2 class="section-title">Benefícios imediatos no campo</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <h4>Economia de insumos</h4>
+            <p>Evite sobredosagem e reduza o desperdício de defensivos e adjuvantes.</p>
+          </div>
+          <div class="benefit-card">
+            <h4>Aplicação segura</h4>
+            <p>Alertas automáticos sobre limites de bula, clima crítico e EPIs necessários.</p>
+          </div>
+          <div class="benefit-card">
+            <h4>Rastreabilidade</h4>
+            <p>Salve cenários e gere relatórios simples para compartilhar com a equipe.</p>
+          </div>
+          <div class="benefit-card">
+            <h4>Disponível em qualquer dispositivo</h4>
+            <p>Interface responsiva pensada para tablets e smartphones em campo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <div class="container card">
+        <h2 class="section-title">De agricultores para agricultores</h2>
+        <div class="steps">
+          <blockquote>
+            “Antes era tudo na calculadora e muita tentativa e erro. Agora a equipe já sai pro campo com a mistura certa.”
+            <br /><strong>— Carla Menezes, Granja Santa Luzia</strong>
+          </blockquote>
+          <blockquote>
+            “A simulação me ajuda a remarcar a pulverização quando o vento aperta. Isso sozinho já pagou o sistema.”
+            <br /><strong>— João Batista, Agro Vale Verde</strong>
+          </blockquote>
+          <blockquote>
+            “Uso no celular e no tablet. O pessoal da aplicação parou de improvisar, cada tanque sai dentro da recomendação.”
+            <br /><strong>— Flávio Souza, Fazenda Rio Claro</strong>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container card">
+        <h2 class="section-title">Perguntas frequentes</h2>
+        <div class="faq">
+          <details>
+            <summary>Os dados da minha fazenda ficam armazenados?</summary>
+            <p>Você pode escolher salvar os planos para acompanhar histórico. Sem sua autorização, nada é enviado a terceiros.</p>
+          </details>
+          <details>
+            <summary>Funciona sem internet?</summary>
+            <p>O cálculo funciona offline após carregar a página. O salvamento de planos e sincronização exigem conexão.</p>
+          </details>
+          <details>
+            <summary>Posso usar com qualquer produto?</summary>
+            <p>Incluímos as principais culturas e pragas. Sempre confirme a bula e consulte um responsável técnico antes de aplicar.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="lead">
+      <div class="container">
+        <div class="lead-form">
+          <h2 class="section-title" style="color: white; margin-bottom: 12px;">Receba checklists e atualizações</h2>
+          <p>Cadastre-se para receber alertas de clima, atualizações de bula e modelos prontos de plano de aplicação.</p>
+          <form id="lead-form">
+            <div class="grid-2">
+              <div>
+                <label for="nome">Nome</label>
+                <input type="text" id="nome" placeholder="Seu nome completo" required />
+              </div>
+              <div>
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="seunome@fazenda.com.br" required />
+              </div>
+            </div>
+            <div>
+              <label for="mensagem">Descreva sua operação (opcional)</label>
+              <textarea id="mensagem" rows="3" placeholder="Ex.: 400 ha de milho e soja, 3 pulverizadores autopropelidos"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Quero receber novidades</button>
+            <p id="lead-feedback" style="margin-top: 10px; font-weight: 600;"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> AgriDose Simples. Consulte sempre um engenheiro agrônomo antes de aplicar qualquer defensivo.
+  </footer>
+
+  <script>
+    // Scroll helper
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+    }
+
+    // Dados do simulador
+    const baseDados = {
+      soja: {
+        nome: "Soja",
+        pragas: {
+          lagarta: {
+            volume: { inicial: 120, vegetativo: 150, reprodutivo: 180, maturacao: 140 },
+            intervaloDias: 12,
+            epis: "Macacão impermeável, luvas nitrílicas, botas, máscara P3 e óculos."
+          },
+          ferrugem: {
+            volume: { inicial: 100, vegetativo: 140, reprodutivo: 160, maturacao: 150 },
+            intervaloDias: 14,
+            epis: "Macacão hidrorepelente, luvas nitrílicas, máscara com carvão ativado e viseira."
+          }
+        }
+      },
+      milho: {
+        nome: "Milho",
+        pragas: {
+          percevejo: {
+            volume: { inicial: 130, vegetativo: 160, reprodutivo: 190, maturacao: 160 },
+            intervaloDias: 10,
+            epis: "Macacão, botas, luvas neoprene, máscara semifacial e óculos fechados."
+          },
+          manchaBranca: {
+            volume: { inicial: 110, vegetativo: 150, reprodutivo: 170, maturacao: 155 },
+            intervaloDias: 12,
+            epis: "Macacão impermeável, luvas nitrílicas e máscara facial com filtro químico."
+          }
+        }
+      },
+      cafe: {
+        nome: "Café",
+        pragas: {
+          bichoMineiro: {
+            volume: { inicial: 150, vegetativo: 180, reprodutivo: 200, maturacao: 180 },
+            intervaloDias: 15,
+            epis: "Macacão completo, avental químico, luvas nitrílicas, respirador P3."
+          },
+          ferrugemCafe: {
+            volume: { inicial: 140, vegetativo: 170, reprodutivo: 190, maturacao: 185 },
+            intervaloDias: 18,
+            epis: "Macacão hidrorepelente, máscara química, face shield e luvas longa."
+          }
+        }
+      }
+    };
+
+    const culturaSelect = document.getElementById("cultura");
+    const pragaSelect = document.getElementById("praga");
+
+    function carregarCulturas() {
+      Object.entries(baseDados).forEach(([key, cultura]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = cultura.nome;
+        culturaSelect.appendChild(option);
+      });
+      atualizarPragas();
+    }
+
+    function atualizarPragas() {
+      const culturaSelecionada = culturaSelect.value;
+      pragaSelect.innerHTML = "";
+      Object.entries(baseDados[culturaSelecionada].pragas).forEach(([key, praga]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = pragaNomeFormatado(key);
+        pragaSelect.appendChild(option);
+      });
+    }
+
+    function pragaNomeFormatado(key) {
+      return key
+        .replace(/([A-Z])/g, " $1")
+        .replace(/^[a-z]/, letra => letra.toUpperCase())
+        .replace("Ferrugem", "Ferrugem")
+        .trim();
+    }
+
+    culturaSelect.addEventListener("change", atualizarPragas);
+    carregarCulturas();
+
+    // Calculadora de Dosagem
+    document.getElementById("dosage-form").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const area = parseFloat(document.getElementById("area").value);
+      const volumeCalda = parseFloat(document.getElementById("volumeCalda").value);
+      const doseRecomendada = parseFloat(document.getElementById("doseRecomendada").value);
+      const concentracao = parseFloat(document.getElementById("concentracao").value);
+      const limiteLegal = parseFloat(document.getElementById("limiteLegal").value);
+      const volumeTanque = parseFloat(document.getElementById("volumeTanque").value);
+
+      if ([area, volumeCalda, doseRecomendada, concentracao, limiteLegal, volumeTanque].some(isNaN)) {
+        alert("Preencha todos os campos corretamente.");
+        return;
+      }
+
+      const produtoTotal = area * doseRecomendada;
+      const caldaTotal = area * volumeCalda;
+      const tanquesNecessarios = Math.ceil(caldaTotal / volumeTanque);
+      const produtoPorTanque = produtoTotal / tanquesNecessarios;
+
+      document.getElementById("caldaTotal").textContent = `${caldaTotal.toFixed(1)} L`;
+      document.getElementById("produtoTotal").textContent = `${produtoTotal.toFixed(2)} ${doseRecomendada >= 1 ? "L" : "kg"}`;
+      document.getElementById("tanquesNecessarios").textContent = `${tanquesNecessarios} tanque(s)`;
+      document.getElementById("produtoPorTanque").textContent = `${produtoPorTanque.toFixed(2)} por tanque`;
+
+      const dosePorHa = produtoTotal / area;
+      const alerta = document.getElementById("alertaLimite");
+      alerta.style.display = dosePorHa > limiteLegal ? "block" : "none";
+
+      document.getElementById("dosage-results").style.display = "block";
+    });
+
+    // Simulador
+    document.getElementById("simulation-form").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const cultura = culturaSelect.value;
+      const praga = pragaSelect.value;
+      const estagio = document.getElementById("estagio").value;
+      const clima = document.getElementById("clima").value;
+
+      const dadosPraga = baseDados[cultura].pragas[praga];
+      const volumeBase = dadosPraga.volume[estagio];
+      let volumeAjustado = volumeBase;
+      let condicoes = [];
+
+      switch (clima) {
+        case "vento-moderado":
+          volumeAjustado *= 1.08;
+          condicoes.push("Programar aplicação para períodos entre 4h e 9h.");
+          break;
+        case "temperatura-alta":
+          volumeAjustado *= 1.05;
+          condicoes.push("Evitar aplicações no pico da tarde. Preferir amanhecer/entardecer.");
+          break;
+        case "umidade-baixa":
+          volumeAjustado *= 1.1;
+          condicoes.push("Uso de adjuvante antideriva recomendado.");
+          break;
+        default:
+          condicoes.push("Condições favoráveis para pulverização.");
+      }
+
+      document.getElementById("volumeRecomendado").textContent = `${volumeAjustado.toFixed(0)} L/ha`;
+      document.getElementById("intervaloAplicacao").textContent = `${dadosPraga.intervaloDias} dias`;
+      document.getElementById("condicoesCriticas").textContent = condicoes.join(" ");
+      document.getElementById("epis").textContent = dadosPraga.epis;
+
+      const alertaClima = document.getElementById("alertaClima");
+      if (clima === "ideal") {
+        alertaClima.style.display = "none";
+      } else {
+        alertaClima.textContent = "⚠ Ajuste o horário da aplicação para reduzir perdas por deriva ou evaporação.";
+        alertaClima.style.display = "block";
+      }
+
+      document.getElementById("simulation-results").style.display = "block";
+    });
+
+    // Lead form (mock)
+    document.getElementById("lead-form").addEventListener("submit", event => {
+      event.preventDefault();
+      const feedback = document.getElementById("lead-feedback");
+      feedback.textContent = "Obrigado! Entraremos em contato com novidades e materiais exclusivos.";
+      feedback.style.color = "var(--amarelo)";
+      event.target.reset();
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
