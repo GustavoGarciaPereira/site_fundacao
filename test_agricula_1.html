@@ -1,0 +1,1336 @@
+# Landing Page Agrícola - Soluções Inteligentes para o Campo
+
+Aqui está uma landing page completa para o setor agrícola com todas as funcionalidades solicitadas:
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroTech - Soluções Inteligentes para o Campo</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Reset e configurações básicas */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-green: #2e7d32;
+            --secondary-green: #4caf50;
+            --light-green: #8bc34a;
+            --brown: #795548;
+            --light-brown: #a1887f;
+            --yellow: #ffd54f;
+            --white: #ffffff;
+            --light-gray: #f5f5f5;
+            --dark-gray: #424242;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            color: var(--dark-gray);
+            line-height: 1.6;
+            background-color: var(--white);
+        }
+
+        /* Header e Navegação */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-green);
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary-green);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-green);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background-color: var(--primary-green);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(46, 125, 50, 0.8), rgba(76, 175, 80, 0.7)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232e7d32"/><path d="M0,50 Q25,30 50,50 T100,50" fill="%234caf50"/></svg>');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 10rem 5% 5rem;
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-buttons .cta-button {
+            background-color: var(--yellow);
+            color: var(--dark-gray);
+        }
+
+        .hero-buttons .secondary-button {
+            background-color: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        /* Seções Gerais */
+        section {
+            padding: 5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-green);
+            font-size: 2.2rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--yellow);
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+
+        /* Seção Ferramentas */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tool-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .tool-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+
+        .tool-card p {
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Calculadora de Dosagem */
+        .calculator-container {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .calculator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary-green);
+            outline: none;
+        }
+
+        .calculator-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .result-card:hover {
+            transform: scale(1.05);
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 0.5rem 0;
+        }
+
+        .result-label {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        .chart-container {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .history-container {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Conversores */
+        .converter-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .converter-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .converter-card h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-green);
+            text-align: center;
+        }
+
+        .converter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Seção Benefícios */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .benefit-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+
+        /* Seção Como Funciona */
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            background-color: var(--primary-green);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-green);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-green);
+            color: var(--white);
+            padding: 3rem 5%;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--light-gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--yellow);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+
+            nav {
+                display: none;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+
+            .calculator-form {
+                grid-template-columns: 1fr;
+            }
+
+            .calculator-results {
+                grid-template-columns: 1fr;
+            }
+
+            .step {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-icon">🌱</span>
+                <span>AgroTech</span>
+            </div>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#tools">Ferramentas</a></li>
+                    <li><a href="#benefits">Benefícios</a></li>
+                    <li><a href="#how-it-works">Como Funciona</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+            </nav>
+            <a href="#tools" class="cta-button">Experimente Grátis</a>
+            <div class="mobile-menu" id="mobile-menu">☰</div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>Ferramentas Inteligentes para o Agricultor Moderno</h1>
+        <p>Otimize sua produção com calculadoras, conversores e simuladores desenvolvidos especialmente para o setor agrícola.</p>
+        <div class="hero-buttons">
+            <a href="#tools" class="cta-button">Começar Agora</a>
+            <a href="#how-it-works" class="cta-button secondary-button">Saiba Mais</a>
+        </div>
+    </section>
+
+    <!-- Seção Ferramentas -->
+    <section id="tools">
+        <h2 class="section-title">Nossas Ferramentas</h2>
+        
+        <div class="tools-grid">
+            <div class="tool-card" onclick="showCalculator('dosage')">
+                <div class="tool-icon">🧪</div>
+                <h3>Calculadora de Dosagem</h3>
+                <p>Calcule a quantidade exata de defensivos agrícolas para sua área de cultivo.</p>
+                <span class="cta-button">Usar Ferramenta</span>
+            </div>
+            
+            <div class="tool-card" onclick="showCalculator('converters')">
+                <div class="tool-icon">🔄</div>
+                <h3>Conversores Agrícolas</h3>
+                <p>Converta entre diferentes unidades de área, peso e volume usadas na agricultura.</p>
+                <span class="cta-button">Usar Ferramenta</span>
+            </div>
+            
+            <div class="tool-card" onclick="showCalculator('productivity')">
+                <div class="tool-icon">📈</div>
+                <h3>Calculadora de Produtividade</h3>
+                <p>Calcule a produtividade da sua lavoura e identifique oportunidades de melhoria.</p>
+                <span class="cta-button">Usar Ferramenta</span>
+            </div>
+            
+            <div class="tool-card" onclick="showCalculator('costs')">
+                <div class="tool-icon">💰</div>
+                <h3>Simulador de Custos</h3>
+                <p>Simule os custos de produção por hectare e planeje seu orçamento.</p>
+                <span class="cta-button">Usar Ferramenta</span>
+            </div>
+        </div>
+
+        <!-- Calculadora de Dosagem -->
+        <div id="dosage-calculator" class="calculator-container">
+            <h3>Calculadora de Dosagem de Defensivos Agrícolas</h3>
+            
+            <form class="calculator-form" id="dosage-form">
+                <div class="form-group">
+                    <label for="area">Área a ser tratada (hectares)</label>
+                    <input type="number" id="area" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dosage">Dosagem recomendada</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="dosage" step="0.01" min="0" required style="flex: 1;">
+                        <select id="dosage-unit">
+                            <option value="ml">ml/ha</option>
+                            <option value="g">g/ha</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="volume">Volume de calda (L/ha)</label>
+                    <input type="number" id="volume" step="0.1" min="0" required>
+                </div>
+                
+                <button type="submit" class="cta-button" style="grid-column: 1 / -1;">Calcular</button>
+            </form>
+            
+            <div class="calculator-results" id="dosage-results" style="display: none;">
+                <div class="result-card">
+                    <div class="result-label">Produto Necessário</div>
+                    <div class="result-value" id="product-needed">0</div>
+                    <div class="result-unit" id="product-unit">ml</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-label">Volume Total de Calda</div>
+                    <div class="result-value" id="total-volume">0</div>
+                    <div class="result-unit">Litros</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-label">Proporção</div>
+                    <div class="result-value" id="proportion">0</div>
+                    <div class="result-unit">Produto/Água</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="dosage-chart"></canvas>
+            </div>
+            
+            <div class="history-container">
+                <h4>Histórico de Cálculos</h4>
+                <div class="history-list" id="dosage-history"></div>
+            </div>
+        </div>
+
+        <!-- Conversores -->
+        <div id="converters-calculator" class="calculator-container" style="display: none;">
+            <h3>Conversores Agrícolas</h3>
+            
+            <div class="converter-container">
+                <div class="converter-card">
+                    <h3>Conversor de Área</h3>
+                    <form class="converter-form" id="area-converter">
+                        <div class="form-group">
+                            <label for="area-value">Valor</label>
+                            <input type="number" id="area-value" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="area-from">De</label>
+                            <select id="area-from">
+                                <option value="hectares">Hectares</option>
+                                <option value="alqueires">Alqueires</option>
+                                <option value="acres">Acres</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="area-to">Para</label>
+                            <select id="area-to">
+                                <option value="hectares">Hectares</option>
+                                <option value="alqueires">Alqueires</option>
+                                <option value="acres">Acres</option>
+                            </select>
+                        </div>
+                        
+                        <button type="button" class="cta-button" onclick="convertArea()">Converter</button>
+                        
+                        <div class="result-card" style="margin-top: 1rem; display: none;" id="area-result">
+                            <div class="result-label">Resultado</div>
+                            <div class="result-value" id="area-converted-value">0</div>
+                            <div class="result-unit" id="area-converted-unit">hectares</div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="converter-card">
+                    <h3>Conversor de Peso</h3>
+                    <form class="converter-form" id="weight-converter">
+                        <div class="form-group">
+                            <label for="weight-value">Valor</label>
+                            <input type="number" id="weight-value" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="weight-from">De</label>
+                            <select id="weight-from">
+                                <option value="kg">Quilogramas (kg)</option>
+                                <option value="ton">Toneladas</option>
+                                <option value="arroba">Arroba (@)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="weight-to">Para</label>
+                            <select id="weight-to">
+                                <option value="kg">Quilogramas (kg)</option>
+                                <option value="ton">Toneladas</option>
+                                <option value="arroba">Arroba (@)</option>
+                            </select>
+                        </div>
+                        
+                        <button type="button" class="cta-button" onclick="convertWeight()">Converter</button>
+                        
+                        <div class="result-card" style="margin-top: 1rem; display: none;" id="weight-result">
+                            <div class="result-label">Resultado</div>
+                            <div class="result-value" id="weight-converted-value">0</div>
+                            <div class="result-unit" id="weight-converted-unit">kg</div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="converter-card">
+                    <h3>Conversor de Volume</h3>
+                    <form class="converter-form" id="volume-converter">
+                        <div class="form-group">
+                            <label for="volume-value">Valor</label>
+                            <input type="number" id="volume-value" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="volume-from">De</label>
+                            <select id="volume-from">
+                                <option value="liters">Litros</option>
+                                <option value="gallons">Galões</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="volume-to">Para</label>
+                            <select id="volume-to">
+                                <option value="liters">Litros</option>
+                                <option value="gallons">Galões</option>
+                            </select>
+                        </div>
+                        
+                        <button type="button" class="cta-button" onclick="convertVolume()">Converter</button>
+                        
+                        <div class="result-card" style="margin-top: 1rem; display: none;" id="volume-result">
+                            <div class="result-label">Resultado</div>
+                            <div class="result-value" id="volume-converted-value">0</div>
+                            <div class="result-unit" id="volume-converted-unit">litros</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculadora de Produtividade -->
+        <div id="productivity-calculator" class="calculator-container" style="display: none;">
+            <h3>Calculadora de Produtividade</h3>
+            
+            <form class="calculator-form" id="productivity-form">
+                <div class="form-group">
+                    <label for="total-production">Produção Total</label>
+                    <input type="number" id="total-production" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="production-unit">Unidade de Produção</label>
+                    <select id="production-unit">
+                        <option value="kg">Quilogramas (kg)</option>
+                        <option value="ton">Toneladas</option>
+                        <option value="sacks">Sacas</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cultivated-area">Área Cultivada (hectares)</label>
+                    <input type="number" id="cultivated-area" step="0.01" min="0" required>
+                </div>
+                
+                <button type="submit" class="cta-button" style="grid-column: 1 / -1;">Calcular Produtividade</button>
+            </form>
+            
+            <div class="calculator-results" id="productivity-results" style="display: none;">
+                <div class="result-card">
+                    <div class="result-label">Produtividade</div>
+                    <div class="result-value" id="productivity-value">0</div>
+                    <div class="result-unit" id="productivity-unit">kg/ha</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulador de Custos -->
+        <div id="costs-calculator" class="calculator-container" style="display: none;">
+            <h3>Simulador de Custos por Hectare</h3>
+            
+            <form class="calculator-form" id="costs-form">
+                <div class="form-group">
+                    <label for="inputs-cost">Custo com Insumos (R$)</label>
+                    <input type="number" id="inputs-cost" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="labor-cost">Custo com Mão de Obra (R$)</label>
+                    <input type="number" id="labor-cost" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="machinery-cost">Custo com Maquinário (R$)</label>
+                    <input type="number" id="machinery-cost" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="other-costs">Outros Custos (R$)</label>
+                    <input type="number" id="other-costs" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="total-area">Área Total (hectares)</label>
+                    <input type="number" id="total-area" step="0.01" min="0" required>
+                </div>
+                
+                <button type="submit" class="cta-button" style="grid-column: 1 / -1;">Calcular Custos</button>
+            </form>
+            
+            <div class="calculator-results" id="costs-results" style="display: none;">
+                <div class="result-card">
+                    <div class="result-label">Custo Total</div>
+                    <div class="result-value" id="total-cost">R$ 0</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-label">Custo por Hectare</div>
+                    <div class="result-value" id="cost-per-hectare">R$ 0</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Benefícios -->
+    <section id="benefits" style="background-color: var(--light-gray);">
+        <h2 class="section-title">Benefícios para Agricultores</h2>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">⏱️</div>
+                <h3>Economia de Tempo</h3>
+                <p>Realize cálculos complexos em segundos, sem necessidade de planilhas manuais.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">💰</div>
+                <h3>Redução de Custos</h3>
+                <p>Evite desperdícios com dosagens incorretas e otimize o uso de insumos.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">📊</div>
+                <h3>Tomada de Decisão</h3>
+                <p>Baseie suas decisões em dados precisos e análises detalhadas.</p>
+            </div>
+            
+            <div class="benefit-card">
+                <div class="benefit-icon">🌍</div>
+                <h3>Sustentabilidade</h3>
+                <p>Use apenas a quantidade necessária de defensivos, reduzindo impactos ambientais.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção Como Funciona -->
+    <section id="how-it-works">
+        <h2 class="section-title">Como Funciona</h2>
+        
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Selecione a Ferramenta</h3>
+                    <p>Escolha entre as diversas calculadoras e conversores disponíveis de acordo com sua necessidade.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Insira os Dados</h3>
+                    <p>Preencha os campos com as informações da sua lavoura, cultura ou operação agrícola.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Obtenha Resultados</h3>
+                    <p>Receba cálculos precisos instantaneamente, com gráficos visuais para melhor compreensão.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Aplique no Campo</h3>
+                    <p>Utilize os resultados para otimizar suas operações agrícolas e aumentar a produtividade.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>AgroTech</h3>
+                <p>Soluções inteligentes para o agricultor moderno. Ferramentas práticas para otimizar sua produção agrícola.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Ferramentas</h3>
+                <ul>
+                    <li><a href="#tools">Calculadora de Dosagem</a></li>
+                    <li><a href="#tools">Conversores Agrícolas</a></li>
+                    <li><a href="#tools">Calculadora de Produtividade</a></li>
+                    <li><a href="#tools">Simulador de Custos</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <ul>
+                    <li>📧 contato@agrotech.com.br</li>
+                    <li>📞 (11) 99999-9999</li>
+                    <li>📍 São Paulo, SP - Brasil</li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#benefits">Benefícios</a></li>
+                    <li><a href="#how-it-works">Como Funciona</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 AgroTech. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Variáveis globais
+        let dosageChart = null;
+        let calculationHistory = JSON.parse(localStorage.getItem('dosageHistory')) || [];
+
+        // Inicialização quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar menu móvel
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mainNav = document.getElementById('main-nav');
+            
+            mobileMenu.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+            });
+
+            // Inicializar a calculadora de dosagem
+            initDosageCalculator();
+            
+            // Mostrar a calculadora de dosagem por padrão
+            showCalculator('dosage');
+            
+            // Carregar histórico
+            loadHistory();
+        });
+
+        // Função para mostrar a calculadora selecionada
+        function showCalculator(type) {
+            // Esconder todas as calculadoras
+            document.getElementById('dosage-calculator').style.display = 'none';
+            document.getElementById('converters-calculator').style.display = 'none';
+            document.getElementById('productivity-calculator').style.display = 'none';
+            document.getElementById('costs-calculator').style.display = 'none';
+            
+            // Mostrar a calculadora selecionada
+            switch(type) {
+                case 'dosage':
+                    document.getElementById('dosage-calculator').style.display = 'block';
+                    break;
+                case 'converters':
+                    document.getElementById('converters-calculator').style.display = 'block';
+                    break;
+                case 'productivity':
+                    document.getElementById('productivity-calculator').style.display = 'block';
+                    break;
+                case 'costs':
+                    document.getElementById('costs-calculator').style.display = 'block';
+                    break;
+            }
+            
+            // Scroll suave para a seção de ferramentas
+            document.getElementById('tools').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Inicializar calculadora de dosagem
+        function initDosageCalculator() {
+            const form = document.getElementById('dosage-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateDosage();
+            });
+        }
+
+        // Calcular dosagem de defensivos
+        function calculateDosage() {
+            // Obter valores dos inputs
+            const area = parseFloat(document.getElementById('area').value);
+            const dosage = parseFloat(document.getElementById('dosage').value);
+            const volume = parseFloat(document.getElementById('volume').value);
+            const dosageUnit = document.getElementById('dosage-unit').value;
+            
+            // Validar entradas
+            if (!area || !dosage || !volume) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+            
+            // Calcular resultados
+            const productNeeded = area * dosage;
+            const totalVolume = area * volume;
+            const proportion = (productNeeded / totalVolume * 1000).toFixed(2); // ml por litro
+            
+            // Exibir resultados
+            document.getElementById('product-needed').textContent = productNeeded.toFixed(2);
+            document.getElementById('product-unit').textContent = dosageUnit;
+            document.getElementById('total-volume').textContent = totalVolume.toFixed(2);
+            document.getElementById('proportion').textContent = proportion;
+            
+            // Mostrar seção de resultados
+            document.getElementById('dosage-results').style.display = 'grid';
+            
+            // Atualizar gráfico
+            updateDosageChart(productNeeded, totalVolume, dosageUnit);
+            
+            // Salvar no histórico
+            saveToHistory(area, dosage, volume, productNeeded, totalVolume, dosageUnit);
+        }
+
+        // Atualizar gráfico de dosagem
+        function updateDosageChart(productNeeded, totalVolume, unit) {
+            const ctx = document.getElementById('dosage-chart').getContext('2d');
+            
+            // Destruir gráfico anterior se existir
+            if (dosageChart) {
+                dosageChart.destroy();
+            }
+            
+            // Criar novo gráfico
+            dosageChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Produto (' + unit + ')', 'Água (L)'],
+                    datasets: [{
+                        data: [productNeeded, totalVolume - productNeeded],
+                        backgroundColor: [
+                            '#2e7d32', // Verde para o produto
+                            '#4caf50'  // Verde claro para a água
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Proporção Produto/Água na Calda'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+        }
+
+        // Salvar cálculo no histórico
+        function saveToHistory(area, dosage, volume, productNeeded, totalVolume, unit) {
+            const calculation = {
+                id: Date.now(),
+                area: area,
+                dosage: dosage,
+                volume: volume,
+                productNeeded: productNeeded,
+                totalVolume: totalVolume,
+                unit: unit,
+                date: new Date().toLocaleString('pt-BR')
+            };
+            
+            calculationHistory.unshift(calculation);
+            
+            // Manter apenas os últimos 10 cálculos
+            if (calculationHistory.length > 10) {
+                calculationHistory = calculationHistory.slice(0, 10);
+            }
+            
+            // Salvar no localStorage
+            localStorage.setItem('dosageHistory', JSON.stringify(calculationHistory));
+            
+            // Atualizar exibição do histórico
+            loadHistory();
+        }
+
+        // Carregar histórico
+        function loadHistory() {
+            const historyList = document.getElementById('dosage-history');
+            historyList.innerHTML = '';
+            
+            if (calculationHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #666;">Nenhum cálculo realizado ainda</p>';
+                return;
+            }
+            
+            calculationHistory.forEach(calc => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div>
+                        <strong>${calc.area} ha</strong> × ${calc.dosage} ${calc.unit}/ha
+                    </div>
+                    <div>
+                        ${calc.productNeeded.toFixed(2)} ${calc.unit}
+                    </div>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        // CONVERSORES
+        function convertArea() {
+            const value = parseFloat(document.getElementById('area-value').value);
+            const fromUnit = document.getElementById('area-from').value;
+            const toUnit = document.getElementById('area-to').value;
+            
+            if (!value || value <= 0) {
+                alert('Por favor, insira um valor válido!');
+                return;
+            }
+            
+            // Fatores de conversão (1 hectare = 2.42 alqueires paulista = 2.47 acres)
+            const conversionFactors = {
+                hectares: 1,
+                alqueires: 2.42,
+                acres: 2.47
+            };
+            
+            // Converter para hectares primeiro
+            const valueInHectares = value / conversionFactors[fromUnit];
+            // Converter para unidade desejada
+            const convertedValue = valueInHectares * conversionFactors[toUnit];
+            
+            // Exibir resultado
+            document.getElementById('area-converted-value').textContent = convertedValue.toFixed(4);
+            document.getElementById('area-converted-unit').textContent = toUnit;
+            document.getElementById('area-result').style.display = 'block';
+        }
+
+        function convertWeight() {
+            const value = parseFloat(document.getElementById('weight-value').value);
+            const fromUnit = document.getElementById('weight-from').value;
+            const toUnit = document.getElementById('weight-to').value;
+            
+            if (!value || value <= 0) {
+                alert('Por favor, insira um valor válido!');
+                return;
+            }
+            
+            // Fatores de conversão (1 arroba = 15 kg, 1 tonelada = 1000 kg)
+            const conversionFactors = {
+                kg: 1,
+                ton: 1000,
+                arroba: 15
+            };
+            
+            // Converter para kg primeiro
+            const valueInKg = value * conversionFactors[fromUnit];
+            // Converter para unidade desejada
+            const convertedValue = valueInKg / conversionFactors[toUnit];
+            
+            // Exibir resultado
+            document.getElementById('weight-converted-value').textContent = convertedValue.toFixed(4);
+            document.getElementById('weight-converted-unit').textContent = toUnit;
+            document.getElementById('weight-result').style.display = 'block';
+        }
+
+        function convertVolume() {
+            const value = parseFloat(document.getElementById('volume-value').value);
+            const fromUnit = document.getElementById('volume-from').value;
+            const toUnit = document.getElementById('volume-to').value;
+            
+            if (!value || value <= 0) {
+                alert('Por favor, insira um valor válido!');
+                return;
+            }
+            
+            // Fatores de conversão (1 galão = 3.78541 litros)
+            let convertedValue;
+            
+            if (fromUnit === 'liters' && toUnit === 'gallons') {
+                convertedValue = value / 3.78541;
+            } else if (fromUnit === 'gallons' && toUnit === 'liters') {
+                convertedValue = value * 3.78541;
+            } else {
+                convertedValue = value; // Mesma unidade
+            }
+            
+            // Exibir resultado
+            document.getElementById('volume-converted-value').textContent = convertedValue.toFixed(4);
+            document.getElementById('volume-converted-unit').textContent = toUnit;
+            document.getElementById('volume-result').style.display = 'block';
+        }
+
+        // CALCULADORA DE PRODUTIVIDADE
+        document.getElementById('productivity-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const totalProduction = parseFloat(document.getElementById('total-production').value);
+            const productionUnit = document.getElementById('production-unit').value;
+            const cultivatedArea = parseFloat(document.getElementById('cultivated-area').value);
+            
+            if (!totalProduction || !cultivatedArea || totalProduction <= 0 || cultivatedArea <= 0) {
+                alert('Por favor, preencha todos os campos com valores válidos!');
+                return;
+            }
+            
+            // Calcular produtividade (produção total / área)
+            const productivity = totalProduction / cultivatedArea;
+            
+            // Exibir resultado
+            document.getElementById('productivity-value').textContent = productivity.toFixed(2);
+            document.getElementById('productivity-unit').textContent = productionUnit + '/ha';
+            document.getElementById('productivity-results').style.display = 'grid';
+        });
+
+        // SIMULADOR DE CUSTOS
+        document.getElementById('costs-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const inputsCost = parseFloat(document.getElementById('inputs-cost').value) || 0;
+            const laborCost = parseFloat(document.getElementById('labor-cost').value) || 0;
+            const machineryCost = parseFloat(document.getElementById('machinery-cost').value) || 0;
+            const otherCosts = parseFloat(document.getElementById('other-costs').value) || 0;
+            const totalArea = parseFloat(document.getElementById('total-area').value);
+            
+            if (!totalArea || totalArea <= 0) {
+                alert('Por favor, insira uma área total válida!');
+                return;
+            }
+            
+            // Calcular custos
+            const totalCost = inputsCost + laborCost + machineryCost + otherCosts;
+            const costPerHectare = totalCost / totalArea;
+            
+            // Exibir resultados
+            document.getElementById('total-cost').textContent = 'R$ ' + totalCost.toFixed(2);
+            document.getElementById('cost-per-hectare').textContent = 'R$ ' + costPerHectare.toFixed(2);
+            document.getElementById('costs-results').style.display = 'grid';
+        });
+
+        // Efeito de scroll no header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+                header.style.padding = '0.5rem 0';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                header.style.padding = '1rem 0';
+            }
+        });
+
+        // Fechar menu móvel ao clicar em um link
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('main-nav').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
