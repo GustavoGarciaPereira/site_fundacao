@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isaac Asimov | A Fundação</title>
+    <!-- Fontes: Cinzel (Clássico/Império) e Exo 2 (Futurista/Sci-Fi) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* VARIÁVEIS E RESET */
+        :root {
+            --bg-deep: #020205;
+            --bg-space: #0b0d17;
+            --accent-cyan: #00f3ff;
+            --accent-gold: #d4af37;
+            --text-main: #e0e6ed;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --neon-glow: 0 0 10px rgba(0, 243, 255, 0.5);
+            --gold-glow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Exo 2', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* SCROLLBAR PERSONALIZADA */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-cyan);
+            border-radius: 4px;
+        }
+
+        /* TIPOGRAFIA */
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(to right, var(--accent-gold), #fff, var(--accent-gold));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* CANVAS BACKGROUND */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        /* LAYOUT UTILS */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        /* HEADER & NAV */
+        header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.4s ease;
+            padding: 20px 0;
+            border-bottom: 1px solid transparent;
+        }
+
+        header.scrolled {
+            background: rgba(2, 2, 5, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            text-shadow: var(--neon-glow);
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-cyan);
+            transition: width 0.3s ease;
+            box-shadow: var(--neon-glow);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            z-index: 2;
+            padding: 2rem;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(3px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, var(--accent-cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: glowPulse 3s infinite alternate;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-cta {
+            padding: 15px 40px;
+            background: transparent;
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--accent-cyan);
+            z-index: -1;
+            transition: left 0.3s ease;
+        }
+
+        .btn-cta:hover {
+            color: var(--bg-deep);
+            box-shadow: var(--neon-glow);
+        }
+
+        .btn-cta:hover::before {
+            left: 0;
+        }
+
+        /* TIMELINE (SAGA) */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--accent-gold), transparent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-card {
+            width: 45%;
+            margin-bottom: 60px;
+            position: relative;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .timeline-card:nth-child(odd) {
+            margin-left: auto;
+        }
+
+        .timeline-card::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            width: 16px;
+            height: 16px;
+            background: var(--bg-deep);
+            border: 2px solid var(--accent-gold);
+            border-radius: 50%;
+            box-shadow: var(--gold-glow);
+            z-index: 2;
+        }
+
+        .timeline-card:nth-child(odd)::after {
+            left: -59px; /* Ajuste fino para alinhar com a linha */
+        }
+
+        .timeline-card:nth-child(even)::after {
+            right: -59px;
+        }
+
+        .year {
+            color: var(--accent-gold);
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* BOOK CARDS (3D Effect) */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            perspective: 1000px;
+        }
+
+        .book-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-image {
+            height: 250px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Overlay gradiente para as imagens */
+        .book-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, var(--bg-deep), transparent);
+        }
+
+        .book-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            color: var(--accent-cyan);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 15px 40px rgba(0, 243, 255, 0.1);
+        }
+
+        /* ASIMOV SECTION */
+        .asimov-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .asimov-img-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .asimov-img-wrapper img {
+            width: 100%;
+            display: block;
+            transition: transform 0.5s ease;
+            filter: grayscale(20%) sepia(10%);
+        }
+
+        .asimov-img-wrapper:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .bio-text h3 {
+            color: var(--accent-gold);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #000;
+            padding: 60px 0 30px;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .quote-box {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            padding: 30px;
+            border-left: 3px solid var(--accent-cyan);
+            background: linear-gradient(90deg, rgba(0, 243, 255, 0.05), transparent);
+            text-align: left;
+        }
+
+        .quote-text {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        .quote-author {
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .footer-bottom {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 40px;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            
+            .timeline::before { left: 20px; }
+            
+            .timeline-card {
+                width: calc(100% - 50px);
+                margin-left: 50px !important;
+            }
+            
+            .timeline-card::after {
+                left: -39px !important;
+            }
+
+            .asimov-container { grid-template-columns: 1fr; }
+            
+            .nav-links { display: none; } /* Simplificação para o exemplo */
+            
+            .menu-toggle {
+                display: block;
+                color: var(--accent-cyan);
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+
+        /* ANIMAÇÕES */
+        @keyframes glowPulse {
+            from { text-shadow: 0 0 10px rgba(255,255,255,0.1); }
+            to { text-shadow: 0 0 20px rgba(0, 243, 255, 0.6), 0 0 40px rgba(0, 243, 255, 0.3); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fundo Interativo -->
+    <canvas id="starfield"></canvas>
+
+    <header id="header">
+        <div class="container nav-container">
+            <a href="#" class="logo">FUNDAÇÃO</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#saga">A Saga</a></li>
+                    <li><a href="#livros">Biblioteca</a></li>
+                    <li><a href="#asimov">O Autor</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="inicio" class="hero">
+        <div class="hero-content">
+            <h1>O Futuro da Humanidade</h1>
+            <p>A Psicohistória prevê a queda do Império. A Fundação é a única esperança para reduzir a era das trevas de 30.000 para 1.000 anos.</p>
+            <a href="#saga" class="btn-cta">Iniciar Jornada</a>
+        </div>
+    </section>
+
+    <section id="saga" class="section">
+        <div class="container">
+            <h2>A Linha do Tempo</h2>
+            <div class="timeline">
+                <div class="timeline-card fade-in">
+                    <span class="year">12.067 E.G.</span>
+                    <h3>Fundação</h3>
+                    <p>Hari Seldon estabelece a Fundação em Terminus, um planeta na borda da galáxia, para preservar o conhecimento humano.</p>
+                </div>
+                <div class="timeline-card fade-in">
+                    <span class="year">12.068 E.G.</span>
+                    <h3>Fundação e Império</h3>
+                    <p>O Império colapsa. A Fundação enfrenta o General Bel Riose e, mais tarde, a anomalia genética conhecida como O Mulo.</p>
+                </div>
+                <div class="timeline-card fade-in">
+                    <span class="year">12.069 E.G.</span>
+                    <h3>Segunda Fundação</h3>
+                    <p>A busca pela misteriosa Segunda Fundação começa, enquanto os mentálicos tentam recolocar o Plano Seldon nos trilhos.</p>
+                </div>
+                <div class="timeline-card fade-in">
+                    <span class="year">498 E.F.</span>
+                    <h3>Limites da Fundação</h3>
+                    <p>Golan Trevize questiona a perfeição do Plano Seldon e parte em busca do planeta ancestral: a Terra.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="livros" class="section">
+        <div class="container">
+            <h2>Biblioteca Galáctica</h2>
+            <div class="books-grid">
+                <!-- Card 1 -->
+                <div class="book-card fade-in">
+                    <div class="book-image" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="book-content">
+                        <h3 class="book-title">Fundação</h3>
+                        <p class="book-desc">O clássico original. Cinco histórias curtas que narram os primeiros séculos da Colônia.</p>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="book-card fade-in">
+                    <div class="book-image" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="book-content">
+                        <h3 class="book-title">Fundação e Império</h3>
+                        <p class="book-desc">A batalha entre a ordem decadente e a nova ciência. O surgimento do Mulo.</p>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="book-card fade-in">
+                    <div class="book-image" style="background-image: url('https://images.unsplash.com/photo-1506318137071-a8bcbf6755dd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+                    <div class="book-content">
+                        <h3 class="book-title">Segunda Fundação</h3>
+                        <p class="book-desc">Onde está a segunda colônia? Um jogo de xadrez mental pelo destino da galáxia.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="asimov" class="section">
+        <div class="container">
+            <h2>O Bom Doutor</h2>
+            <div class="asimov-container">
+                <div class="asimov-img-wrapper fade-in">
+                    <!-- Imagem ilustrativa de Asimov/Sci-fi Writer -->
+                    <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Escritório de Escritor">
+                </div>
+                <div class="bio-text fade-in">
+                    <p>Isaac Asimov (1920-1992) não foi apenas um escritor; foi um visionário. Com mais de 500 obras publicadas, ele redefiniu a ficção científica, tirando-a dos monstros espaciais e trazendo-a para a sociologia, política e matemática.</p>
+                    
+                    <h3>As Três Leis</h3>
+                    <p>Além da Fundação, Asimov criou as Leis da Robótica, que hoje são discutidas seriamente em ética de Inteligência Artificial.</p>
+                    
+                    <h3>O Grande Mestre</h3>
+                    <p>Em 1966, a trilogia Fundação ganhou o prêmio Hugo de "Melhor Série de Todos os Tempos", superando O Senhor dos Anéis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="quote-box">
+                <p class="quote-text">"A violência é o último refúgio do incompetente."</p>
+                <span class="quote-author">— Salvor Hardin</span>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2023 Enciclopédia Galáctica. Todos os direitos reservados. Design recriado com IA.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. STARFIELD CANVAS ANIMATION
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars = [];
+
+        function initCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            stars = [];
+            for(let i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
+
+        function animateStars() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#ffffff';
+            
+            stars.forEach(star => {
+                ctx.globalAlpha = Math.random() * 0.5 + 0.5;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Movimento suave para cima (efeito de viagem espacial lenta)
+                star.y -= star.speed;
+                if(star.y < 0) star.y = height;
+            });
+            
+            requestAnimationFrame(animateStars);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animateStars();
+
+        // 2. SCROLL HEADER EFFECT
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if(window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // 3. INTERSECTION OBSERVER FOR FADE-IN
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
