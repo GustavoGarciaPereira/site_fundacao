@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ferramentas agrícolas inteligentes: calculadoras de dosagem, conversão e produtividade.">
+    <title>AgroTech Pro | Inteligência no Campo</title>
+    
+    <!-- Fontes e Ícones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- Variáveis e Reset --- */
+        :root {
+            --primary: #1B4D3E; /* Verde Floresta */
+            --primary-light: #2C7A62;
+            --accent: #F2C94C; /* Dourado Colheita */
+            --text-dark: #1F2937;
+            --text-light: #6B7280;
+            --bg-light: #F3F4F6;
+            --white: #FFFFFF;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* --- Utilitários --- */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 6px rgba(27, 77, 62, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+
+        .btn-accent:hover {
+            background-color: #e0b836;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .btn-outline:hover {
+            background: var(--white);
+            color: var(--primary);
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            position: relative;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(rgba(27, 77, 62, 0.85), rgba(27, 77, 62, 0.7)), 
+                        url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--white);
+            margin-top: 0;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: slideUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            padding-top: 2rem;
+        }
+
+        .stat-item h4 {
+            color: var(--accent);
+            font-size: 2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-item span {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* --- Seções Gerais --- */
+        section {
+            padding: 6rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+        }
+
+        /* --- Cards de Ferramentas --- */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .tool-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(27, 77, 62, 0.1);
+        }
+
+        .tool-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .tool-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(27, 77, 62, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .tool-card p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* --- Área da Calculadora (Dashboard) --- */
+        .calculator-wrapper {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-top: 2rem;
+            display: none; /* Escondido por padrão */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .calc-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calc-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .input-group input, .input-group select {
+            padding: 0.8rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(27, 77, 62, 0.1);
+        }
+
+        .results-panel {
+            background: var(--bg-light);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+
+        .result-box {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--accent);
+        }
+
+        .result-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Benefícios --- */
+        .benefits-section {
+            background-color: var(--primary);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .benefits-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background: rgba(255,255,255,0.05);
+            transform: skewX(-20deg);
+        }
+
+        .benefits-section h2, .benefits-section p {
+            color: var(--white);
+        }
+
+        .benefits-section .section-header p {
+            opacity: 0.8;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .benefit-item i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: #111827;
+            color: #9CA3AF;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-col h4 {
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-col a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #374151;
+            font-size: 0.9rem;
+        }
+
+        /* --- Animações --- */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Responsividade --- */
+        @media (max-width: 992px) {
+            .calc-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-inner {
+                padding: 0 1rem;
+            }
+
+            nav {
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: var(--white);
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                display: none;
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo">
+                <i class="fa-solid fa-leaf"></i>
+                AgroTech<span style="color: var(--accent);">Pro</span>
+            </div>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#tools">Ferramentas</a></li>
+                    <li><a href="#benefits">Benefícios</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                    <li><a href="#tools" class="btn btn-primary" style="color: white; padding: 0.5rem 1.2rem;">Acessar App</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-toggle" id="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Tecnologia de Ponta para o <span style="color: var(--accent);">Agronegócio</span></h1>
+                <p>Otimize sua produção com nossa suíte de ferramentas inteligentes. Cálculos precisos de dosagem, conversões e análise de custos em um só lugar.</p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="#tools" class="btn btn-primary">Começar Agora <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="#how-it-works" class="btn btn-outline">Como Funciona</a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <h4>+15k</h4>
+                        <span>Produtores Ativos</span>
+                    </div>
+                    <div class="stat-item">
+                        <h4>2.5M</h4>
+                        <span>Hectares Calculados</span>
+                    </div>
+                    <div class="stat-item">
+                        <h4>98%</h4>
+                        <span>Precisão Garantida</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ferramentas -->
+    <section id="tools" class="container">
+        <div class="section-header reveal">
+            <h2>Ferramentas Inteligentes</h2>
+            <p>Selecione uma das ferramentas abaixo para iniciar seus cálculos.</p>
+        </div>
+
+        <div class="tools-grid reveal">
+            <!-- Card Dosagem -->
+            <div class="tool-card" onclick="activateTool('dosage')">
+                <div class="tool-icon"><i class="fa-solid fa-flask"></i></div>
+                <h3>Calculadora de Dosagem</h3>
+                <p>Defina a quantidade exata de defensivos e volume de calda por hectare.</p>
+                <span style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">Acessar <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+
+            <!-- Card Conversor -->
+            <div class="tool-card" onclick="activateTool('converter')">
+                <div class="tool-icon"><i class="fa-solid fa-right-left"></i></div>
+                <h3>Conversor Agrícola</h3>
+                <p>Converta unidades de área (Alqueires, Hectares) e peso rapidamente.</p>
+                <span style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">Acessar <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+
+            <!-- Card Custos -->
+            <div class="tool-card" onclick="activateTool('costs')">
+                <div class="tool-icon"><i class="fa-solid fa-coins"></i></div>
+                <h3>Simulador de Custos</h3>
+                <p>Planeje seu orçamento e calcule o custo operacional por hectare.</p>
+                <span style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">Acessar <i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+        </div>
+
+        <!-- ÁREA DINÂMICA DAS CALCULADORAS -->
+        
+        <!-- 1. Calculadora de Dosagem -->
+        <div id="dosage-tool" class="calculator-wrapper">
+            <div class="calc-header">
+                <h3><i class="fa-solid fa-flask"></i> Calculadora de Dosagem</h3>
+                <button class="btn btn-outline" style="font-size: 0.8rem; padding: 0.4rem 1rem;" onclick="closeTool('dosage-tool')">Fechar</button>
+            </div>
+            <div class="calc-body">
+                <form id="dosage-form">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Área Total (ha)</label>
+                            <input type="number" id="d-area" placeholder="Ex: 50" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Volume de Calda (L/ha)</label>
+                            <input type="number" id="d-volume" placeholder="Ex: 150" required>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Dosagem do Produto</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="d-dose" placeholder="Quantidade" style="flex: 1;" required>
+                                <select id="d-unit" style="width: 120px;">
+                                    <option value="ml">ml/ha</option>
+                                    <option value="g">g/ha</option>
+                                    <option value="l">L/ha</option>
+                                    <option value="kg">kg/ha</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="calcDosage()">Calcular Agora</button>
+                </form>
+
+                <div class="results-panel" id="dosage-results" style="opacity: 0.5; pointer-events: none;">
+                    <div class="result-box">
+                        <span class="result-label">Produto Total Necessário</span>
+                        <span class="result-value" id="res-product">0</span>
+                        <small id="res-unit-display">Litros/Kg</small>
+                    </div>
+                    <div class="result-box" style="border-color: var(--primary);">
+                        <span class="result-label">Volume Total de Água</span>
+                        <span class="result-value" id="res-water">0</span>
+                        <small>Litros</small>
+                    </div>
+                    <div style="height: 200px; position: relative;">
+                        <canvas id="dosageChart"></canvas>
+                    </div>
+                    <button class="btn btn-outline" style="width: 100%; border-color: var(--primary); color: var(--primary); margin-top: 1rem;" onclick="alert('Relatório enviado para impressão!')"><i class="fa-solid fa-print"></i> Imprimir Relatório</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Conversor -->
+        <div id="converter-tool" class="calculator-wrapper">
+            <div class="calc-header">
+                <h3><i class="fa-solid fa-right-left"></i> Conversor de Unidades</h3>
+                <button class="btn btn-outline" style="font-size: 0.8rem; padding: 0.4rem 1rem;" onclick="closeTool('converter-tool')">Fechar</button>
+            </div>
+            <div class="calc-body">
+                <div class="full-width">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Valor</label>
+                            <input type="number" id="c-val" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label>Converter de:</label>
+                            <select id="c-from">
+                                <option value="ha">Hectares</option>
+                                <option value="alq_sp">Alqueire Paulista (2.42ha)</option>
+                                <option value="alq_mg">Alqueire Mineiro (4.84ha)</option>
+                                <option value="acre">Acres</option>
+                            </select>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Para:</label>
+                            <select id="c-to">
+                                <option value="ha">Hectares</option>
+                                <option value="alq_sp">Alqueire Paulista</option>
+                                <option value="alq_mg">Alqueire Mineiro</option>
+                                <option value="acre">Acres</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="calcConverter()">Converter</button>
+                    
+                    <div class="result-box" style="margin-top: 2rem; border-color: var(--accent);">
+                        <span class="result-label">Resultado</span>
+                        <span class="result-value" id="c-result">0.00</span>
+                        <small id="c-result-unit">Unidade</small>
+                    </div>
+                </div>
+                <!-- Espaço para info extra ou imagem -->
+                <div style="display: flex; align-items: center; justify-content: center; background: #f0fdf4; border-radius: 8px; padding: 2rem; text-align: center;">
+                    <div>
+                        <i class="fa-solid fa-circle-info" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <p>O Alqueire Paulista equivale a 24.200m², enquanto o Mineiro/Goiano equivale a 48.400m².</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Simulador de Custos (Placeholder simplificado) -->
+        <div id="costs-tool" class="calculator-wrapper">
+            <div class="calc-header">
+                <h3><i class="fa-solid fa-coins"></i> Simulador de Custos</h3>
+                <button class="btn btn-outline" style="font-size: 0.8rem; padding: 0.4rem 1rem;" onclick="closeTool('costs-tool')">Fechar</button>
+            </div>
+            <div class="calc-body">
+                <form id="cost-form">
+                    <div class="form-grid">
+                        <div class="input-group"><label>Insumos (R$)</label><input type="number" class="cost-input"></div>
+                        <div class="input-group"><label>Mão de Obra (R$)</label><input type="number" class="cost-input"></div>
+                        <div class="input-group"><label>Maquinário (R$)</label><input type="number" class="cost-input"></div>
+                        <div class="input-group"><label>Área (ha)</label><input type="number" id="cost-area"></div>
+                    </div>
+                    <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="calcCost()">Calcular Total</button>
+                </form>
+                <div class="results-panel">
+                    <div class="result-box">
+                        <span class="result-label">Custo por Hectare</span>
+                        <span class="result-value" id="res-cost-ha">R$ 0,00</span>
+                    </div>
+                    <div class="result-box" style="border-color: var(--text-dark);">
+                        <span class="result-label">Custo Total da Safra</span>
+                        <span class="result-value" id="res-cost-total">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Benefícios -->
+    <section id="benefits" class="benefits-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Por que usar a AgroTech Pro?</h2>
+                <p>Tecnologia desenvolvida por agrônomos para maximizar seus resultados.</p>
+            </div>
+            <div class="tools-grid">
+                <div class="benefit-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Redução de Custos</h3>
+                    <p>Evite desperdícios de insumos com cálculos de precisão milimétrica.</p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>Agilidade no Campo</h3>
+                    <p>Interface otimizada para uso em celulares, mesmo com conexão lenta.</p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fa-solid fa-leaf"></i>
+                    <h3>Sustentabilidade</h3>
+                    <p>Aplique apenas o necessário, protegendo o solo e o meio ambiente.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 1rem; color: white;">
+                        <i class="fa-solid fa-leaf" style="color: var(--accent);"></i> AgroTechPro
+                    </div>
+                    <p>Soluções digitais para o agronegócio moderno. Conectando dados à produtividade.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Ferramentas</h4>
+                    <ul>
+                        <li><a href="#">Calculadora de Dosagem</a></li>
+                        <li><a href="#">Conversor de Unidades</a></li>
+                        <li><a href="#">Previsão do Tempo</a></li>
+                        <li><a href="#">Cotações</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contato</h4>
+                    <ul>
+                        <li><i class="fa-solid fa-envelope"></i> suporte@agrotech.com</li>
+                        <li><i class="fa-brands fa-whatsapp"></i> (11) 99999-9999</li>
+                        <li><i class="fa-solid fa-location-dot"></i> São Paulo, SP</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 AgroTech Pro. Todos os direitos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- UI Logic ---
+        
+        // Mobile Menu
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('main-nav').classList.toggle('active');
+        });
+
+        // Scroll Reveal Animation
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 150;
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        reveal(); // Trigger on load
+
+        // Tool Switching Logic
+        function activateTool(toolId) {
+            // Hide all tools first
+            document.querySelectorAll('.calculator-wrapper').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected
+            const selected = document.getElementById(toolId + '-tool');
+            if(selected) {
+                selected.style.display = 'block';
+                // Smooth scroll to tool
+                selected.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function closeTool(elementId) {
+            document.getElementById(elementId).style.display = 'none';
+            document.getElementById('tools').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Business Logic ---
+
+        // 1. Dosage Calculator
+        let myChart = null;
+
+        function calcDosage() {
+            const area = parseFloat(document.getElementById('d-area').value);
+            const volume = parseFloat(document.getElementById('d-volume').value);
+            const dose = parseFloat(document.getElementById('d-dose').value);
+            const unit = document.getElementById('d-unit').value;
+
+            if (!area || !volume || !dose) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            const totalProduct = area * dose;
+            const totalWater = (area * volume) - (unit === 'l' || unit === 'kg' ? totalProduct : 0); // Simplificação
+
+            // Update UI
+            document.getElementById('res-product').innerText = totalProduct.toLocaleString('pt-BR', {maximumFractionDigits: 2});
+            document.getElementById('res-unit-display').innerText = unit.toUpperCase();
+            document.getElementById('res-water').innerText = (area * volume).toLocaleString('pt-BR', {maximumFractionDigits: 0});
+            
+            const resultsPanel = document.getElementById('dosage-results');
+            resultsPanel.style.opacity = '1';
+            resultsPanel.style.pointerEvents = 'all';
+
+            // Chart.js
+            const ctx = document.getElementById('dosageChart').getContext('2d');
+            if (myChart) myChart.destroy();
+
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Produto', 'Água'],
+                    datasets: [{
+                        data: [totalProduct, (area * volume)], // Proporção visual
+                        backgroundColor: ['#F2C94C', '#1B4D3E'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+        }
+
+        // 2. Converter Logic
+        function calcConverter() {
+            const val = parseFloat(document.getElementById('c-val').value);
+            const from = document.getElementById('c-from').value;
+            const to = document.getElementById('c-to').value;
+
+            if(isNaN(val)) return;
+
+            // Base unit: Hectare
+            const factors = {
+                'ha': 1,
+                'alq_sp': 2.42,
+                'alq_mg': 4.84,
+                'acre': 0.4047
+            };
+
+            const valInHa = val * factors[from];
+            const result = valInHa / factors[to];
+
+            document.getElementById('c-result').innerText = result.toLocaleString('pt-BR', {maximumFractionDigits: 4});
+            
+            const unitNames = {
+                'ha': 'Hectares',
+                'alq_sp': 'Alqueires Paulistas',
+                'alq_mg': 'Alqueires Mineiros',
+                'acre': 'Acres'
+            };
+            document.getElementById('c-result-unit').innerText = unitNames[to];
+        }
+
+        // 3. Cost Logic
+        function calcCost() {
+            const inputs = document.querySelectorAll('.cost-input');
+            let sum = 0;
+            inputs.forEach(input => sum += parseFloat(input.value || 0));
+            
+            const area = parseFloat(document.getElementById('cost-area').value || 1);
+            
+            document.getElementById('res-cost-total').innerText = sum.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+            document.getElementById('res-cost-ha').innerText = (sum / area).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        }
+
+    </script>
+</body>
+</html>
